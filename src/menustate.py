@@ -1,0 +1,6 @@
+class MenuState:
+    def update(self):
+        ...
+
+    def draw(self):
+        ...
