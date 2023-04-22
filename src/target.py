@@ -62,7 +62,8 @@ class Target:
         if type_ == self.shared.sidebar.target:
             self.shared.score += self.score_gain
         elif type_ == "monster":
-            print("YOU SHOT THE MONSTER")
+            self.shared.lost = True
+            self.shared.lost_cause = "You Shot The Monster!"
         else:
             self.shared.score -= self.score_gain
 
@@ -77,25 +78,36 @@ class Target:
     def reset_time_per_second(self):
         self.time_size = 1
 
-    def update(self):
-        self.gen_pos()
-        self.toggle_cursor()
-        self.on_click()
+    def create_score_parameters(self):
         self.score_surf = self.SCORE_FONT.render(str(self.score_gain), True, "black")
         self.score_gain = self.max_score_gain * (
             self.shared.time_left / self.shared.total_time
         )
         self.score_gain = int(self.score_gain)
+
+    def deetermine_color(self):
         if self.shared.time_left > 3:
             color = "black"
         else:
             color = (150, 0, 0)
+
+        return color
+
+    def create_time_parameters(self):
+        color = self.deetermine_color()
         self.time_left_surf = self.TIME_FONT.render(
             str(self.shared.time_left), True, color
         )
 
         self.time_left_surf = scale_by(self.time_left_surf, self.time_size)
         self.time_size -= 0.5 * self.shared.dt
+
+    def update(self):
+        self.gen_pos()
+        self.toggle_cursor()
+        self.on_click()
+        self.create_score_parameters()
+        self.create_time_parameters()
 
     def draw(self):
         render_at(self.shared.game_surface, self.score_surf, "topright")

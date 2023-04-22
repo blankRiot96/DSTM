@@ -2,6 +2,7 @@ import typing as t
 
 import pygame
 
+from src.gameover import GameOver
 from src.gamestate import GameState
 from src.menustate import MenuState
 from src.state_enums import State
@@ -23,6 +24,7 @@ class StateManager:
         self.state_dict: dict[State, StateLike] = {
             State.MENU: MenuState,
             State.GAME: GameState,
+            State.GAME_OVER: GameOver,
         }
         self.state_obj: StateLike = self.state_dict.get(self.state_enum)()
 

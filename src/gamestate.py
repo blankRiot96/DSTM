@@ -12,7 +12,7 @@ from src.utils import Time, render_at
 class GameState:
     def __init__(self) -> None:
         self.next_state: None | State = None
-        self.shared = Shared(score=0)
+        self.shared = Shared(score=0, lost=False, lost_cause="")
         self.shared.total_time = 10
         self.shared.time_left = self.shared.total_time
         self.game_surface = pygame.Surface(
@@ -54,6 +54,12 @@ class GameState:
                 self.reset()
 
         self.shared.sidebar.update()
+
+        if self.shared.lost:
+            pygame.mouse.set_cursor(self.shared.target.ui_cursor)
+            self.next_state = State.GAME_OVER
+            self.draw()
+            self.shared.last_frame = self.shared.screen.copy()
 
     def draw(self):
         # self.shared.screen.fill("black")
