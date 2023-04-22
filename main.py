@@ -12,6 +12,7 @@ class Game:
         from src.states import StateManager
 
         self.shared.dt = 0.0
+        self.shared.mouse_pos = (0, 0)
         self.state_manager = StateManager()
 
     def win_init(self):
@@ -27,14 +28,15 @@ class Game:
         # pygame.mouse.set_cursor(pygame.cursors.Cursor(center, img))
 
     def update(self):
-        events = pygame.event.get()
-        for event in events:
+        self.shared.events = pygame.event.get()
+        for event in self.shared.events:
             if event.type == pygame.QUIT:
                 raise SystemExit
 
         self.state_manager.update()
         self.shared.dt = self.clock.tick() / 1000
         self.shared.dt = min(self.shared.dt, 0.1)
+        self.shared.mouse_pos = pygame.mouse.get_pos()
         pygame.display.flip()
 
     def draw(self):

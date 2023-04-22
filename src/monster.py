@@ -9,3 +9,4 @@ class Monster(Entity):
 
     def __init__(self) -> None:
         super().__init__(self.IMAGE, self.SPEED)
+        self.type_ = "monster"
