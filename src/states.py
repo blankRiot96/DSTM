@@ -20,7 +20,7 @@ class StateLike(t.Protocol):
 
 class StateManager:
     def __init__(self) -> None:
-        self.__state_enum = State.GAME
+        self.__state_enum = State.MENU
         self.state_dict: dict[State, StateLike] = {
             State.MENU: MenuState,
             State.GAME: GameState,

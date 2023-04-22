@@ -1,3 +1,5 @@
+import time
+
 import pygame
 
 from src.shared import Shared
@@ -31,7 +33,7 @@ class CauseTextAnimation:
     """Blinking effect for cause of death"""
 
     FONT = get_font("assets/fonts/bold1.ttf", 32)
-    MAX_BLINKS = 6
+    MAX_BLINKS = 6  # Not sure if I want a max blinks, will keep as dead code for now
     TEXT_COLOR = (193, 184, 163)
 
     def __init__(self) -> None:
@@ -65,6 +67,32 @@ class ScoreAnimation:
 
     (yes with commas)
     """
+
+    FONT = get_font("assets/fonts/bold1.ttf", 44)
+    ANIM_SEC = 2.5
+    TEXT_COLOR = (255, 255, 163)
+
+    def __init__(self) -> None:
+        self.shared = Shared()
+        self.running_score = 0
+        self.start = time.perf_counter()
+
+    def update(self):
+        if self.running_score >= self.shared.score:
+            self.running_score = self.shared.score
+            return
+
+        time_passed = time.perf_counter() - self.start
+
+        ratio = time_passed / self.ANIM_SEC
+        self.running_score = self.shared.score * ratio
+        self.running_score = int(self.running_score)
+
+    def draw(self):
+        surf = self.FONT.render(
+            f"< {format(self.running_score, ',')} >", True, self.TEXT_COLOR
+        )
+        render_at(self.shared.screen, surf, "midtop", (0, 40))
 
 
 class Button:
@@ -112,10 +140,20 @@ class Button:
         self.surf = self.base_surf
         self.text_surf = self.FONT.render(self.text, True, self.TEXT_COLOR)
         self.text_rect = self.text_surf.get_rect(center=self.center)
+        self.clicked = False
 
     def update(self):
+        self.clicked = False
+
+        clicked = False
+        for event in self.shared.events:
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                clicked = True
+
         if self.rect.collidepoint(self.shared.mouse_pos):
             self.surf = self.hover_surf
+            if clicked:
+                self.clicked = True
         else:
             self.surf = self.base_surf
 
@@ -142,6 +180,8 @@ class GameOver:
             "retry", self.shared.SRECT.center + pygame.Vector2(100, 100), (150, 50)
         )
 
+        self.running_score = ScoreAnimation()
+
     def alpha_adjust(self):
         self.overlay.set_alpha(self.alpha)
         if self.alpha >= 150.0:
@@ -149,12 +189,25 @@ class GameOver:
             return
         self.alpha += 100.0 * self.shared.dt
 
+    def update_menu_btn(self):
+        self.main_menu_btn.update()
+
+        if self.main_menu_btn.clicked:
+            self.next_state = State.MENU
+
+    def update_retry_btn(self):
+        self.retry_btn.update()
+
+        if self.retry_btn.clicked:
+            self.next_state = State.GAME
+
     def update(self):
         self.alpha_adjust()
         self.gota.update()
         self.cta.update()
-        self.main_menu_btn.update()
-        self.retry_btn.update()
+        self.update_menu_btn()
+        self.update_retry_btn()
+        self.running_score.update()
 
     def draw(self):
         self.shared.screen.blit(self.shared.last_frame, (0, 0))
@@ -163,3 +216,4 @@ class GameOver:
         self.cta.draw()
         self.main_menu_btn.draw()
         self.retry_btn.draw()
+        self.running_score.draw()

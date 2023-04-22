@@ -1,6 +1,6 @@
 import pygame
 
-from src.citizen import Citizen
+from src.citizen import Citizen, CitizenType
 from src.monster import Monster
 from src.shared import Shared
 from src.sidebar import SideBar
@@ -11,8 +11,10 @@ from src.utils import Time, render_at
 
 class GameState:
     def __init__(self) -> None:
+        Citizen.SPEED = Citizen.ORIGINAL_SPEED
+        Monster.SPEED = Monster.ORIGINAL_SPEED
         self.next_state: None | State = None
-        self.shared = Shared(score=0, lost=False, lost_cause="")
+        self.shared = Shared(score=0, lost=False, lost_cause="", shot_target=False)
         self.shared.total_time = 10
         self.shared.time_left = self.shared.total_time
         self.game_surface = pygame.Surface(
@@ -29,16 +31,36 @@ class GameState:
         self.timer = Time(1.0)
 
         self.shared.sidebar = SideBar()
+        self.rounds = 0
 
     def reset(self):
-        if self.shared.total_time > 4:
-            self.shared.total_time -= 2
+        self.rounds += 1
+
+        if self.rounds < 10:
+            Citizen.SPEED += 15
+            Monster.SPEED += 15
+        if not self.shared.shot_target:
+            self.shared.lost = True
+            self.shared.lost_cause = "You Didn't Shoot The Target!"
+
+        if self.shared.total_time > 5:
+            self.shared.total_time -= 1
         self.shared.time_left = self.shared.total_time
 
-        self.shared.citizens: list[Citizen] = [Citizen() for _ in range(15)]
+        self.shared.citizens: list[Citizen] = [Citizen() for _ in range(11)]
+        self.shared.citizens.extend(
+            [
+                Citizen(CitizenType.BLUE),
+                Citizen(CitizenType.GREEN),
+                Citizen(CitizenType.RED),
+                Citizen(CitizenType.YELLOW),
+            ]
+        )
         # self.shared.monsters = []
         self.shared.monsters: list[Monster] = [Monster() for _ in range(15)]
         self.shared.sidebar.reset()
+
+        self.shared.shot_target = False
 
     def update(self):
         self.shared.target.update()

@@ -61,6 +61,7 @@ class Target:
     def score(self, type_):
         if type_ == self.shared.sidebar.target:
             self.shared.score += self.score_gain
+            self.shared.shot_target = True
         elif type_ == "monster":
             self.shared.lost = True
             self.shared.lost_cause = "You Shot The Monster!"
@@ -74,6 +75,10 @@ class Target:
 
         if not found:
             self.shared.time_left = 0
+
+        if self.shared.score < 0:
+            self.shared.lost = True
+            self.shared.lost_cause = "You Got A Negative Score!"
 
     def reset_time_per_second(self):
         self.time_size = 1

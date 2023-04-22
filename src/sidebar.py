@@ -32,7 +32,7 @@ class SideBar:
 
     def update(self):
         self.score_surf = self.FONT_2.render(
-            f"SCORE: {self.shared.score}", True, "black"
+            f"SCORE: {format(self.shared.score, ',')}", True, "black"
         )
 
     def draw(self):
