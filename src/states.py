@@ -20,12 +20,17 @@ class StateLike(t.Protocol):
 
 class StateManager:
     def __init__(self) -> None:
-        self.__state_enum = State.MENU
         self.state_dict: dict[State, StateLike] = {
             State.MENU: MenuState,
             State.GAME: GameState,
             State.GAME_OVER: GameOver,
         }
+        self.songs = {
+            State.MENU: "assets/audio/main-menu-bgm.wav",
+            State.GAME: "assets/audio/game-bgm.wav",
+            State.GAME_OVER: "assets/audio/game-over-bgm.wav",
+        }
+        self.state_enum = State.MENU
         self.state_obj: StateLike = self.state_dict.get(self.state_enum)()
 
     @property
@@ -36,6 +41,8 @@ class StateManager:
     def state_enum(self, next_state: State) -> None:
         self.__state_enum = next_state
         self.state_obj: StateLike = self.state_dict.get(self.__state_enum)()
+        pygame.mixer.music.load(self.songs[next_state])
+        pygame.mixer.music.play(fade_ms=2500, loops=-1)
 
     def update(self):
         self.state_obj.update()
