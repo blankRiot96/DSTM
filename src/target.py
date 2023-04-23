@@ -22,6 +22,12 @@ class Target:
         )
         self.time_size = 1
 
+        self.sfx = {
+            "gain": pygame.mixer.Sound("assets/audio/shoot-sfx.wav"),
+            "loss": pygame.mixer.Sound("assets/audio/wrong-target-sfx.wav"),
+            "demon": pygame.mixer.Sound("assets/audio/game-over-sfx.wav"),
+        }
+
     def gen_target_cursor(self):
         img = pygame.image.load("assets/target.png")
         img = scale_by(img, 0.1)
@@ -62,11 +68,15 @@ class Target:
         if type_ == self.shared.sidebar.target:
             self.shared.score += self.score_gain
             self.shared.shot_target = True
+            self.sfx["gain"].play()
         elif type_ == "monster":
             self.shared.lost = True
             self.shared.lost_cause = "You Shot The Monster!"
+            self.sfx["demon"].play()
+
         else:
             self.shared.score -= self.score_gain
+            self.sfx["loss"].play()
 
         found = False
         for citizen in self.shared.citizens:
