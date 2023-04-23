@@ -1,3 +1,6 @@
+import math
+import sys
+
 import pygame
 
 from src.shared import Shared
@@ -33,9 +36,28 @@ class Banner:
         self.image = pygame.image.load("assets/banner.png").convert_alpha()
         self.wave = SinWave(0.005)
         self.y_offset = 0.0
+        self.primary_dt = 0.0
+        self.timer = Time(2.0)
+        self.ticks = 0
+
+        if sys.platform in ("emscripten", "wasi"):
+            self.golgi_value = 2800
+            self.wave.speed = 0.01
+        else:
+            self.golgi_value = 15000
 
     def update(self):
-        self.y_offset = self.wave.val() * 15
+        if self.ticks < 3:
+            self.primary_dt = self.shared.dt
+            self.ticks += 1
+        if self.timer.tick():
+            self.primary_dt = self.shared.dt
+
+        self.y_offset = self.wave.val() * self.golgi_value * self.primary_dt
+        # if self.y_offset > 15:
+        #     self.wave.rad = math.pi
+        # if self.y_offset < -15:
+        #     self.wave.rad = 0
 
     def draw(self):
         render_at(self.shared.screen, self.image, "center", (0, -100 + self.y_offset))
