@@ -80,7 +80,7 @@ class MenuState:
         self.click_anywhere.update()
 
         for event in self.shared.events:
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button in (1, 3):
                 self.next_state = State.GAME
 
     def draw(self):
