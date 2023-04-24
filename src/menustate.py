@@ -81,7 +81,7 @@ class MenuState:
 
         for event in self.shared.events:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button in (1, 3):
-                self.next_state = State.GAME
+                self.next_state = State.TUTORIAL
 
     def draw(self):
         self.shared.screen.blit(self.bg_image, (0, 0))

@@ -6,6 +6,7 @@ from src.gameover import GameOver
 from src.gamestate import GameState
 from src.menustate import MenuState
 from src.state_enums import State
+from src.tutorialstate import TutorialState
 
 
 class StateLike(t.Protocol):
@@ -24,9 +25,11 @@ class StateManager:
             State.MENU: MenuState,
             State.GAME: GameState,
             State.GAME_OVER: GameOver,
+            State.TUTORIAL: TutorialState,
         }
         self.songs = {
             State.MENU: "assets/audio/main-menu-bgm.wav",
+            State.TUTORIAL: "assets/audio/game-bgm.wav",
             State.GAME: "assets/audio/game-bgm.wav",
             State.GAME_OVER: "assets/audio/game-over-bgm.wav",
         }

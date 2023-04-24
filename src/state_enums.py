@@ -5,3 +5,4 @@ class State(Enum):
     MENU = auto()
     GAME = auto()
     GAME_OVER = auto()
+    TUTORIAL = auto()

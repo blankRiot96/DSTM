@@ -1,0 +1,19 @@
+# 1st Slide:
+* Shoot the target
+	- Drag the target cursor to the target
+	- Target surf shown on the side
+
+# 2nd Slide:
+* Star multipliers
+	- Rotate and expand star on left
+	- Describe Star: "Click these to get 2x score boosts!"
+		on the left
+
+# 3rd Slide:
+* How to Win
+	- Show the king with animation on the left
+	- Describe win: "This guy hides behind monsters, but when he is changing from one to another, you have to try and kill him!" in the left
+
+
+
+

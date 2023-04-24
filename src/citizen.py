@@ -41,14 +41,14 @@ class Citizen(Entity):
             return False
 
         if self.type_ == self.shared.sidebar.target:
+            p = self.shared.target.score_gain * self.shared.target.score_multiplier
             color = "green"
             symbol = "+"
         else:
+            p = self.shared.target.score_gain
             color = "red"
             symbol = "-"
-        self.score_surf = self.FONT.render(
-            f"{symbol}{self.shared.target.score_gain}", True, color
-        )
+        self.score_surf = self.FONT.render(f"{symbol}{p:.0f}", True, color)
         self.score_rect = self.score_surf.get_rect(center=self.rect.center)
 
     def update(self):

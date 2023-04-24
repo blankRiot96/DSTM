@@ -21,6 +21,7 @@ class Target:
             str(self.shared.time_left), True, "black"
         )
         self.time_size = 1
+        self.score_multiplier = 1
 
         self.sfx = {
             "gain": pygame.mixer.Sound("assets/audio/shoot-sfx.wav"),
@@ -66,7 +67,7 @@ class Target:
 
     def score(self, type_):
         if type_ == self.shared.sidebar.target:
-            self.shared.score += self.score_gain
+            self.shared.score += self.score_gain * self.score_multiplier
             self.shared.shot_target = True
             self.sfx["gain"].play()
         elif type_ == "monster":
@@ -94,7 +95,9 @@ class Target:
         self.time_size = 1
 
     def create_score_parameters(self):
-        self.score_surf = self.SCORE_FONT.render(str(self.score_gain), True, "black")
+        self.score_surf = self.SCORE_FONT.render(
+            str(int(self.score_gain * self.score_multiplier)), True, "black"
+        )
         self.score_gain = self.max_score_gain * (
             self.shared.time_left / self.shared.total_time
         )
