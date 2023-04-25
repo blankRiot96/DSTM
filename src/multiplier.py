@@ -65,10 +65,10 @@ class StarManager:
         self.stars: list[StarMultiplier] = []
 
     def reset(self):
-        if self.shared.rounds < 0:
+        if self.shared.rounds < 3:
             return
 
-        self.stars = [StarMultiplier() for _ in range(random.randrange(1, 3))]
+        self.stars = [StarMultiplier() for _ in range(random.randrange(3))]
         self.shared.target.score_multiplier = 1
 
     def update(self):

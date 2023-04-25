@@ -88,7 +88,7 @@ class TutorialState:
         self.current_slide = self.slides[self.__current_slide_index]
         self.messages = [
             "< TUTORIAL >",
-            "Press ENTER to skip",
+            "SKIP -> Click Anywhere",
             "Previous slide -> LEFT key",
             "Next slide -> RIGHT key",
         ]
@@ -115,12 +115,12 @@ class TutorialState:
     def read_keys(self):
         for event in self.shared.events:
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    self.next_state = State.GAME
-                elif event.key == pygame.K_LEFT:
+                if event.key == pygame.K_LEFT:
                     self.on_slide_change(-1)
                 elif event.key == pygame.K_RIGHT:
                     self.on_slide_change(1)
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button in (1, 3):
+                self.next_state = State.GAME
 
     def update(self):
         self.current_slide.update()

@@ -74,7 +74,8 @@ class Target:
             self.shared.lost = True
             self.shared.lost_cause = "You Shot The Monster!"
             self.sfx["demon"].play()
-
+        elif type_ == "king":
+            self.shared.won = True
         else:
             self.shared.score -= self.score_gain
             self.sfx["loss"].play()

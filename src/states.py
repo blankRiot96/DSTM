@@ -7,6 +7,7 @@ from src.gamestate import GameState
 from src.menustate import MenuState
 from src.state_enums import State
 from src.tutorialstate import TutorialState
+from src.victorystate import VictoryState
 
 
 class StateLike(t.Protocol):
@@ -26,12 +27,14 @@ class StateManager:
             State.GAME: GameState,
             State.GAME_OVER: GameOver,
             State.TUTORIAL: TutorialState,
+            State.VICTORY: VictoryState,
         }
         self.songs = {
             State.MENU: "assets/audio/main-menu-bgm.wav",
             State.TUTORIAL: "assets/audio/game-bgm.wav",
             State.GAME: "assets/audio/game-bgm.wav",
             State.GAME_OVER: "assets/audio/game-over-bgm.wav",
+            State.VICTORY: "assets/audio/game-bgm.wav",
         }
         self.state_enum = State.MENU
         self.state_obj: StateLike = self.state_dict.get(self.state_enum)()

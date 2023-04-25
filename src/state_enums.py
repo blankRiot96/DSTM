@@ -3,6 +3,7 @@ from enum import Enum, auto
 
 class State(Enum):
     MENU = auto()
+    TUTORIAL = auto()
     GAME = auto()
     GAME_OVER = auto()
-    TUTORIAL = auto()
+    VICTORY = auto()

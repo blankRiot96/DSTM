@@ -1,10 +1,12 @@
+import itertools
 import random
 
 import pygame
 
 from src.citizen import Citizen, CitizenType
+from src.king import King
 from src.shared import Shared
-from src.utils import get_font, render_at
+from src.utils import Time, get_font, render_at
 
 
 class SideBar:
@@ -19,22 +21,37 @@ class SideBar:
         self.score_surf = self.FONT_2.render(
             f"SCORE: {self.shared.score}", True, "black"
         )
+        self.colors = itertools.cycle(("green", "black"))
+        self.color = "black"
+        self.timer = Time(0.5)
+        self.once = True
 
-    def gen_target_surf(self):
+    def gen_target_surf(self, image=None):
+        if image is None:
+            image = Citizen.IMAGES[self.target]
         self.target_surf = pygame.Surface((100, 120), pygame.SRCALPHA)
         pygame.draw.rect(
             self.target_surf, "black", (0, 0, *self.target_surf.get_size()), 5
         )
         render_at(self.target_surf, self.text_surf, "midtop", (0, 10))
-        render_at(self.target_surf, Citizen.IMAGES[self.target], "midbottom", (0, -15))
+        render_at(self.target_surf, image, "midbottom", (0, -15))
 
     def reset(self):
+        if self.shared.winning:
+            self.gen_target_surf(King.IMAGE)
+            return
         self.target = random.choice(tuple(CitizenType))
         self.gen_target_surf()
 
     def update(self):
+        if self.shared.winning:
+            if self.timer.tick():
+                self.color = next(self.colors)
+        else:
+            self.color = "black"
+
         self.score_surf = self.FONT_1.render(
-            f"SCORE: {format(self.shared.score, ',')}", True, "black"
+            f"SCORE: {format(self.shared.score, ',')}", True, self.color
         )
 
     def draw(self):
