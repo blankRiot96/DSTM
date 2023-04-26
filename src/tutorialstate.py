@@ -3,6 +3,7 @@ import random
 import pygame
 
 from src.citizen import Citizen, CitizenType
+from src.multiplier import StarMultiplier
 from src.shared import Shared
 from src.state_enums import State
 from src.utils import get_font, render_at, scale_by
@@ -73,6 +74,71 @@ class Slide1:
         render_at(self.shared.screen, self.instruction_surf, "center", (200, 0))
 
 
+class Slide2:
+    FONT_1 = get_font("assets/fonts/bold1.ttf", 32)
+
+    def __init__(self) -> None:
+        self.shared = Shared()
+        self.example_star = StarMultiplier(collide=False, pos=(300, 300))
+        self.tutorial_text = self.FONT_1.render(
+            "Click these to get 2x score boosts!", True, "yellow"
+        )
+
+    def update(self):
+        self.example_star.update()
+
+    def draw(self):
+        self.example_star.draw(self.shared.screen)
+
+        render_at(
+            self.shared.screen,
+            self.tutorial_text,
+            "center",
+            (75, 0),
+        )
+
+
+class Slide3:
+    FONT_1 = get_font("assets/fonts/bold1.ttf", 32)
+
+    def __init__(self) -> None:
+        self.shared = Shared()
+        self.tutorial_text = self.FONT_1.render(
+            "Kill the king to win the game!", True, "green"
+        )
+        self.presenter = pygame.image.load("assets/king.png").convert_alpha()
+
+    def update(self):
+        ...
+
+    def draw(self):
+        render_at(self.shared.screen, self.presenter, "center", (0, 0))
+        render_at(self.shared.screen, self.tutorial_text, "center", (0, 90))
+
+
+class Slide4:
+    FONT_1 = get_font("assets/fonts/bold1.ttf", 32)
+
+    def __init__(self) -> None:
+        self.shared = Shared()
+        self.tutorial_text = self.FONT_1.render("And finally...", True, "white")
+        self.text_2 = self.FONT_1.render("DON'T SHOOT THE MONSTER!", True, "red")
+        self.presenter = pygame.image.load("assets/monster.png").convert_alpha()
+
+    def update(self):
+        ...
+
+    def draw(self):
+        render_at(self.shared.screen, self.presenter, "center", (0, 0))
+        render_at(self.shared.screen, self.tutorial_text, "center", (0, 90))
+        render_at(
+            self.shared.screen,
+            self.text_2,
+            "center",
+            (0, 90 + self.text_2.get_height()),
+        )
+
+
 def create_from_messages(messages: str, font: pygame.font.Font) -> list[pygame.Surface]:
     return [font.render(message, True, "white") for message in messages]
 
@@ -83,7 +149,7 @@ class TutorialState:
     def __init__(self) -> None:
         self.shared = Shared()
         self.next_state = None
-        self.slides = (Slide1(),)
+        self.slides = (Slide1(), Slide2(), Slide3(), Slide4())
         self.__current_slide_index = 0
         self.current_slide = self.slides[self.__current_slide_index]
         self.messages = [

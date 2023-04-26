@@ -16,12 +16,15 @@ class StarMultiplier:
     ORIGINAL_IMAGE = scale_by(ORIGINAL_IMAGE, 1.5)
     SFX = pygame.mixer.Sound("assets/audio/star-sfx.wav")
 
-    def __init__(self) -> None:
+    def __init__(self, collide=True, pos=None) -> None:
         self.shared = Shared()
-        self.pos = (
-            random.randrange(self.shared.grect.width - 100),
-            random.randrange(self.shared.grect.height - 100),
-        )
+        if pos is None:
+            self.pos = (
+                random.randrange(self.shared.grect.width - 100),
+                random.randrange(self.shared.grect.height - 100),
+            )
+        else:
+            self.pos = pos
         self.image = self.ORIGINAL_IMAGE.copy()
         self.rect = self.image.get_rect(center=self.pos)
         self.angle = 0
@@ -29,6 +32,7 @@ class StarMultiplier:
         self.original_size = self.rect.size[0]
         self.size_wave = SinWave(0.1)
         self.used = False
+        self.collide = collide
 
     def rotate(self):
         self.angle += self.rotational_speed * self.shared.dt
@@ -42,11 +46,7 @@ class StarMultiplier:
 
         self.image = pygame.transform.scale(self.image, (size, size))
 
-    def update(self):
-        self.rotate()
-        self.wobble()
-        self.rect = self.image.get_rect(center=self.pos)
-
+    def on_collision(self):
         if (
             self.rect.collidepoint(self.shared.target.gs_pos)
             and self.shared.target.clicked
@@ -55,8 +55,18 @@ class StarMultiplier:
             self.used = True
             self.SFX.play()
 
-    def draw(self):
-        self.shared.game_surface.blit(self.image, self.rect)
+    def update(self):
+        self.rotate()
+        self.wobble()
+        self.rect = self.image.get_rect(center=self.pos)
+        if self.collide:
+            self.on_collision()
+
+    def draw(self, surf: pygame.Surface | None = None):
+        if surf is None:
+            self.shared.game_surface.blit(self.image, self.rect)
+            return
+        surf.blit(self.image, self.rect)
 
 
 class StarManager:

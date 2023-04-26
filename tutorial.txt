@@ -7,7 +7,7 @@
 * Star multipliers
 	- Rotate and expand star on left
 	- Describe Star: "Click these to get 2x score boosts!"
-		on the left
+		on the right
 
 # 3rd Slide:
 * How to Win
