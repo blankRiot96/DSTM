@@ -27,6 +27,7 @@ class Target:
             "gain": pygame.mixer.Sound("assets/audio/shoot-sfx.wav"),
             "loss": pygame.mixer.Sound("assets/audio/wrong-target-sfx.wav"),
             "demon": pygame.mixer.Sound("assets/audio/game-over-sfx.wav"),
+            "victory": pygame.mixer.Sound("assets/audio/victory-sfx.wav"),
         }
 
     def gen_target_cursor(self):
@@ -76,6 +77,7 @@ class Target:
             self.sfx["demon"].play()
         elif type_ == "king":
             self.shared.won = True
+            self.sfx["victory"].play()
         else:
             self.shared.score -= self.score_gain
             self.sfx["loss"].play()

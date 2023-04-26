@@ -14,6 +14,7 @@ class StarMultiplier:
 
     ORIGINAL_IMAGE = pygame.image.load("assets/star.png").convert_alpha()
     ORIGINAL_IMAGE = scale_by(ORIGINAL_IMAGE, 1.5)
+    SFX = pygame.mixer.Sound("assets/audio/star-sfx.wav")
 
     def __init__(self) -> None:
         self.shared = Shared()
@@ -52,6 +53,7 @@ class StarMultiplier:
         ):
             self.shared.target.score_multiplier *= 2
             self.used = True
+            self.SFX.play()
 
     def draw(self):
         self.shared.game_surface.blit(self.image, self.rect)

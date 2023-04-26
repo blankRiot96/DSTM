@@ -34,7 +34,7 @@ class StateManager:
             State.TUTORIAL: "assets/audio/game-bgm.wav",
             State.GAME: "assets/audio/game-bgm.wav",
             State.GAME_OVER: "assets/audio/game-over-bgm.wav",
-            State.VICTORY: "assets/audio/game-bgm.wav",
+            State.VICTORY: "assets/audio/victory-bgm.wav",
         }
         self.state_enum = State.MENU
         self.state_obj: StateLike = self.state_dict.get(self.state_enum)()

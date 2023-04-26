@@ -17,7 +17,7 @@ class Shared:
     events: list[pygame.event.Event]
     dt: float
 
-    WIN_SCORE = 100
+    WIN_SCORE = 5555
 
     def __new__(cls: type[Self], *args, **kwargs) -> Self:
         if Shared._inst is None:
