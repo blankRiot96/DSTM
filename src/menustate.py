@@ -31,33 +31,34 @@ class ClickAnywhere:
 
 
 class Banner:
+    MAX_Y_OFFSET = 20
+
     def __init__(self) -> None:
         self.shared = Shared()
         self.image = pygame.image.load("assets/banner.png").convert_alpha()
-        self.wave = SinWave(0.005)
-        self.y_offset = 0.0
-        self.primary_dt = 0.0
-        self.timer = Time(2.0)
-        self.ticks = 0
+        self.y_offset = 0
+        self.ascending = True
+        self.speed = 45
 
-        if sys.platform in ("emscripten", "wasi"):
-            self.golgi_value = 2800
-            self.wave.speed = 0.01
-        else:
-            self.golgi_value = 15000
+    def ascend(self):
+        self.y_offset += self.speed * self.shared.dt
+
+        if self.y_offset >= self.MAX_Y_OFFSET:
+            self.y_offset = self.MAX_Y_OFFSET
+            self.ascending = False
+
+    def descend(self):
+        self.y_offset -= self.speed * self.shared.dt
+
+        if self.y_offset <= -self.MAX_Y_OFFSET:
+            self.y_offset = -self.MAX_Y_OFFSET
+            self.ascending = True
 
     def update(self):
-        if self.ticks < 3:
-            self.primary_dt = self.shared.dt
-            self.ticks += 1
-        if self.timer.tick():
-            self.primary_dt = self.shared.dt
-
-        self.y_offset = self.wave.val() * self.golgi_value * self.primary_dt
-        # if self.y_offset > 15:
-        #     self.wave.rad = math.pi
-        # if self.y_offset < -15:
-        #     self.wave.rad = 0
+        if self.ascending:
+            self.ascend()
+        else:
+            self.descend()
 
     def draw(self):
         render_at(self.shared.screen, self.image, "center", (0, -100 + self.y_offset))
